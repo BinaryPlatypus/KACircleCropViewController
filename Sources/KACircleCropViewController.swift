@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol KACircleCropViewControllerDelegate
+public protocol KACircleCropViewControllerDelegate
 {
     
     func circleCropDidCancel()
@@ -16,30 +16,30 @@ protocol KACircleCropViewControllerDelegate
     
 }
 
-class KACircleCropViewController: UIViewController, UIScrollViewDelegate {
+open class KACircleCropViewController: UIViewController, UIScrollViewDelegate {
     
-    var delegate: KACircleCropViewControllerDelegate?
+    open var delegate: KACircleCropViewControllerDelegate?
     
-    var image: UIImage
-    let imageView = UIImageView()
-    let scrollView = KACircleCropScrollView(frame: CGRect(x: 0, y: 0, width: 240, height: 240))
-    let cutterView = KACircleCropCutterView()
+    open var image: UIImage
+    public let imageView = UIImageView()
+    public let scrollView = KACircleCropScrollView(frame: CGRect(x: 0, y: 0, width: 240, height: 240))
+    public let cutterView = KACircleCropCutterView()
     
-    let label = UILabel(frame: CGRect(x: 0, y: 0, width: 130, height: 30))
-    let okButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
-    let backButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
+    public let label = UILabel(frame: CGRect(x: 0, y: 0, width: 130, height: 30))
+    public let okButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
+    public let backButton = UIButton(frame: CGRect(x: 0, y: 0, width: 40, height: 30))
     
     
-    init(withImage image: UIImage) {
+    public init(withImage image: UIImage) {
         self.image = image
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func didReceiveMemoryWarning() {
+    override open func didReceiveMemoryWarning() {
         
         super.didReceiveMemoryWarning()
         
@@ -47,7 +47,7 @@ class KACircleCropViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: View management
     
-    override func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.black
@@ -83,13 +83,13 @@ class KACircleCropViewController: UIViewController, UIScrollViewDelegate {
         label.textColor = UIColor.white
         label.font = label.font.withSize(17)
         
-        okButton.setTitle("OK", for: UIControlState())
-        okButton.setTitleColor(UIColor.white, for: UIControlState())
+        okButton.setTitle("OK", for: UIControl.State())
+        okButton.setTitleColor(UIColor.white, for: UIControl.State())
         okButton.titleLabel?.font = backButton.titleLabel?.font.withSize(17)
         okButton.addTarget(self, action: #selector(didTapOk), for: .touchUpInside)
         
-        backButton.setTitle("<", for: UIControlState())
-        backButton.setTitleColor(UIColor.white, for: UIControlState())
+        backButton.setTitle("<", for: UIControl.State())
+        backButton.setTitleColor(UIColor.white, for: UIControl.State())
         backButton.titleLabel?.font = backButton.titleLabel?.font.withSize(30)
         backButton.addTarget(self, action: #selector(didTapBack), for: .touchUpInside)
         
@@ -105,7 +105,7 @@ class KACircleCropViewController: UIViewController, UIScrollViewDelegate {
     }
     
     
-    func setLabelAndButtonFrames() {
+    open func setLabelAndButtonFrames() {
         
         scrollView.center = view.center
         cutterView.center = view.center
@@ -119,7 +119,7 @@ class KACircleCropViewController: UIViewController, UIScrollViewDelegate {
     }
     
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         
         
         coordinator.animate(alongsideTransition: { (UIViewControllerTransitionCoordinatorContext) -> Void in
@@ -133,12 +133,12 @@ class KACircleCropViewController: UIViewController, UIScrollViewDelegate {
     }
     
     
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    open func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
     
     
-    override var prefersStatusBarHidden : Bool {
+    override open var prefersStatusBarHidden : Bool {
         return true
     }
     
@@ -146,7 +146,7 @@ class KACircleCropViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: Button taps
     
-    func didTapOk() {
+    @objc open func didTapOk() {
         
 
         let newSize = CGSize(width: image.size.width*scrollView.zoomScale, height: image.size.height*scrollView.zoomScale)
@@ -162,7 +162,7 @@ class KACircleCropViewController: UIViewController, UIScrollViewDelegate {
         image.draw(in: sharpRect)
         let finalImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        if let imageData = UIImagePNGRepresentation(finalImage!) {
+        if let imageData = finalImage!.pngData() {
             if let pngImage = UIImage(data: imageData) {
                 delegate?.circleCropDidCropImage(pngImage)
             } else {
@@ -176,7 +176,7 @@ class KACircleCropViewController: UIViewController, UIScrollViewDelegate {
         
     }
     
-    func didTapBack() {
+    @objc open func didTapBack() {
         
         delegate?.circleCropDidCancel()
         
